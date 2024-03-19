@@ -1,0 +1,21 @@
+When method get
+Then status 200
+
+* def expectedValue = 'notificationSentHistoryResponse'
+* def retryCount = 3
+* def retryInterval = 1000
+
+* def matchSucceeded = false
+* def retryIndex = 0
+* while (!matchSucceeded && retryIndex < retryCount) 
+  """
+  * if (karate.match(response.notifications, '#? _.contains(expectedValue)')) {
+      matchSucceeded = true
+  } else {
+      karate.log('Match failed. Retrying...')
+      retryIndex++
+      karate.wait(retryInterval)
+  }
+  """
+
+* if (!matchSucceeded) karate.fail('Match failed after retrying')
